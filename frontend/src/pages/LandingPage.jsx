@@ -6,7 +6,7 @@ function LandingPage() {
   return (
     <>
       <NavbarLandingPage />
-      {/* <ContentLandingPage /> */}
+      <ContentLandingPage />
     </>
   );
 }

@@ -1,0 +1,91 @@
+/* Container for header */
+.header-text {
+    padding-top: 90px;
+    padding-left: 225px;
+}
+
+.header-text h1 {
+    font-size: 36px; 
+    font-weight: bold;
+    margin-bottom: -5px; 
+}
+
+.header-text p {
+    margin-left: 32px; 
+    font-size: 26px; 
+}
+
+/* Container for list */
+ul.list-unstyled {
+    margin-top: 50px; 
+    padding-left: 230px;
+}
+
+ul.list-unstyled li {
+    font-size: 20px; 
+    color: #FFFFFF; 
+}
+
+
+ul.list-unstyled li::before {
+    content: "•"; 
+    color: #00ADB5; 
+    font-size: 22px; 
+    margin-right: 10px; 
+}
+
+/* Container for buttons */
+.btn-row {
+    margin-top: 60px;
+  }
+  
+/* Styling for both buttons */
+.content-page-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px; 
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+/* Primary button */
+.content-page-btn.btn-primary {
+    background-color: #00adb5; 
+    color: #fff;
+    border: none;
+  }
+  
+.content-page-btn.btn-primary:hover {
+    background-color: #027d87; 
+  }
+  
+/* Secondary button (smaller, outline style) */
+.content-page-btn.btn-outline-secondary {
+    color: #fff;
+    border: 2px solid #fff;
+    background-color: transparent;
+  }
+  
+.content-page-btn.btn-outline-secondary:hover {
+    background-color: #fff;
+    color: #393e46; 
+  }
+  
+/* Button spacing */
+.content-page-btn.btn-row .col-4 {
+    margin: 0 10px;
+  }
+  
+/* Adjust button sizes on smaller screens */
+@media (max-width: 768px) {
+    .btn-row .col-4 {
+      margin: 0;
+      padding: 0;
+    }
+  
+    .btn {
+      font-size: 16px; 
+    }
+  }
