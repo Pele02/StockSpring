@@ -1,0 +1,23 @@
+/* Global styles */
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;  
+  background-color: #222831;         
+  color: #FFFFFF;      
+          
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+      font-size: 14px;  
+  }
+
+  table {
+      font-size: 14px;  
+  }
+
+  button {
+      width: 100%;      
+  }
+}

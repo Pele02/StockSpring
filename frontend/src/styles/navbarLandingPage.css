@@ -1,0 +1,102 @@
+@import "./index.css";
+
+/* Global reset for consistency */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding-left: 75px;
+    background-color: #393E46;
+    
+  }
+  
+.navbar-brand {
+    color: #FFFFFF;              
+    font-weight: bold;      
+    margin-right: -2px;
+    padding: 5px;            
+    transition: all 0.3s ease; 
+  }
+  
+.navbar-brand:hover {
+    text-decoration: none;     
+    color: #FFFFFF;            
+    cursor: pointer;           
+  }
+/* Navbar Links */
+.navbar-nav {
+    display: flex;
+    list-style: none;      
+    margin-bottom: 12px;
+  }
+  
+.nav-item .nav-link {
+    color: #FFFFFF;           
+    font-size: 14px;          
+    text-decoration: none;    
+    border-radius: 15px;
+  }
+  
+.nav-item .nav-link:hover {
+    background-color: #00ADB5;
+
+    transition: color 0.3s;   
+  }
+
+/* Buttons */
+.btn{
+    display: flex;
+    align-items: center;
+    margin-top: -13px;
+}
+
+.btn-outline-light {
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    padding: 5px 10px; 
+    margin-right: 10px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+.btn-outline-light:hover {
+    background-color: #FFFFFF;
+    color: #393E46;
+  }
+  
+.btn-light {
+    background-color: #00ADB5;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 10px; /* Smaller padding for compact size */
+    margin-right: 75px;
+    transition: background-color 0.3s ease;
+  }
+  
+.btn-light:hover {
+    background-color: #027D87;
+  }
+
+  /* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        flex-grow: 0;
+    }
+
+    body {
+        font-size: 14px;  
+    }
+  
+    table {
+        font-size: 14px;  
+    }
+  
+    button {
+        width: 100%;      
+    }
+  }
