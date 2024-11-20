@@ -1,8 +1,13 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/NavbarLandingPage.css";
 
 const NavbarLandingPage = () => {
+  const activeLink = ({ isActive }) =>
+    isActive ? "nav-link active-link" : "nav-link";
+
   return (
     <>
       <nav className="navbar navbar-expand-lg ">
@@ -10,28 +15,32 @@ const NavbarLandingPage = () => {
         <div className="navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink className={activeLink} to="">
                 Home
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink className={activeLink} to="/functionality">
                 Funcționalități
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink className={activeLink} to="/support">
                 Suport
-              </a>
+              </NavLink>
             </li>
           </ul>
           <div className="ms-auto d-flex">
-            <button type="button" className="btn btn-outline-light">
-              Login
-            </button>
-            <button type="button" className="btn btn-light">
-              Register
-            </button>
+            <Link to="/login">
+              <button type="button" className="btn btn-outline-light">
+                Autentificare
+              </button>
+            </Link>
+            <Link to="/register">
+              <button type="button" className="btn btn-light">
+                Înregistrare
+              </button>
+            </Link>
           </div>
         </div>
       </nav>

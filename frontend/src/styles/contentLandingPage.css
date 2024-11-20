@@ -78,6 +78,9 @@ ul.list-unstyled li::before {
     margin: 0 10px;
   }
   
+
+
+
 /* Adjust button sizes on smaller screens */
 @media (max-width: 768px) {
     .btn-row .col-4 {
