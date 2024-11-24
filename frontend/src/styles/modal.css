@@ -1,0 +1,87 @@
+/* Modal background and layout */
+.modal {
+    display: block; /* Ensure the modal is visible when the show prop is true */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1050; /* Ensure modal is above other content */
+    padding-top: 100px; /* Center the modal vertically */
+  }
+  
+  /* Modal dialog box */
+  .modal-dialog {
+    max-width: 500px;
+    margin: 0 auto; /* Center horizontally */
+    padding: 0;
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+  }
+  
+  /* Modal header (Title and close button) */
+  .modal-header {
+    border-bottom: none;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  /* Close button styling */
+  .close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .close:hover {
+    color: #333; /* Change color on hover */
+  }
+  
+  /* Modal body (Content area) */
+  .modal-body {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #444;
+    padding: 20px 0;
+  }
+  
+  /* Modal footer (Buttons) */
+  .modal-footer {
+    border-top: none;
+    padding-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .btn-secondary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  

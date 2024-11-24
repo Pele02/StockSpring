@@ -7,10 +7,10 @@ import "../styles/ContentLandingPage.css";
 const ContentLandingPage = () => {
   return (
     <>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col">
-            <div class="header-text">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col">
+            <div className="header-text">
               <h1>Urmărește investițiile tale</h1>
               <p>simplu și rapid cu ajutorul nostru</p>
             </div>
@@ -43,7 +43,7 @@ const ContentLandingPage = () => {
             </div>
           </div>
 
-          <div class="col">
+          <div className="col">
             <img
               src={landingPageImg}
               className=" .img-fluid. max-width: 100%"
