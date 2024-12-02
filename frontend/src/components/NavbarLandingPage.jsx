@@ -14,7 +14,7 @@ const NavbarLandingPage = () => {
         <div className="navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <NavLink className={activeLink} to="">
+              <NavLink className={activeLink} to="/">
                 Home
               </NavLink>
             </li>

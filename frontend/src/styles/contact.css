@@ -1,0 +1,64 @@
+.contact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #222831; /* Dark Grey */
+    min-height: 100vh;
+}
+
+form {
+    max-width: 600px;
+    width: 100%;
+    background: #EEEEEE; /* Light Grey */
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: #393E46; /* Medium Grey */
+    margin: 25px;
+}
+
+form h2 {
+    font-size: 28px;
+    text-align: center;
+    color: #393E46; /* Medium Grey */
+}
+
+form .input-box {
+    margin-top: 20px;
+}
+
+.input-box .field {
+    width: 100%;
+    height: 50px;
+    background: #EEEEEE; /* Light Grey */
+    border: 2px solid #00ADB5; /* Teal */
+    outline: none;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 16px;
+    color: #222831; /* Dark Grey for contrast */
+    margin-top: 8px;
+}
+
+.input-box .field.message {
+    height: 200px;
+    resize: none;
+}
+
+form button {
+    width: 100%;
+    height: 55px;
+    background: #00ADB5; /* Teal */
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    font-size: 16px;
+    color: #EEEEEE; /* Light Grey for text */
+    font-weight: 500;
+    margin-top: 25px;
+    transition: 0.3s;
+}
+
+form button:hover {
+    background: #393E46; /* Medium Grey on hover */
+}

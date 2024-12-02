@@ -82,6 +82,12 @@
     background-color: #027D87;
   }
 
+
+.active-link {
+    background-color: #027D87; 
+    border-radius: 4px;
+  }
+
   /* Responsive Design */
 @media (max-width: 768px) {
     .navbar-collapse {
