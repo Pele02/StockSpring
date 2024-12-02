@@ -1,10 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import dotenv from "dotenv";
-
-//Import KEYs environment
-//dotenv.config();
 
 // Import Pages
 import LandingPage from "./pages/LandingPage";
