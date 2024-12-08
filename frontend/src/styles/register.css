@@ -1,0 +1,16 @@
+body{
+    background: #f9fafb;
+    color: #3f4254;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+}
+.header{
+    margin-top: 30px;
+    text-align: center;
+    
+}
+form{
+    text-align: center;
+}

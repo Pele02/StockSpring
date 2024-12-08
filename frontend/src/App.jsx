@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import SupportPage from "./pages/SupportPage";
+import FunctionalityPage from "./pages/FunctionalityPage";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/functionality" element={<FunctionalityPage />} />
       </Routes>
     </Router>
   );
