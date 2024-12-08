@@ -8,7 +8,7 @@ const ContactForm = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setResult("Sending....");
+    setResult("Se trimite....");
 
     const formData = new FormData(event.target);
     formData.append("access_key", contactKey);
@@ -23,8 +23,8 @@ const ContactForm = () => {
 
       if (data.success) {
         Swal.fire({
-          title: "Good job!",
-          text: "The message was send!",
+          title: "Bună treabă!",
+          text: "Mesajul a fost trimis cu succes!",
           icon: "success",
         });
         event.target.reset();
@@ -45,38 +45,38 @@ const ContactForm = () => {
   return (
     <section className="contact">
       <form onSubmit={onSubmit}>
-        <h2>Contact Form</h2>
+        <h2>Formular Contact</h2>
         <div className="input-box">
-          <label>Full Name</label>
+          <label>Nume</label>
           <input
             type="text"
             className="field"
-            placeholder="Enter your name"
+            placeholder="Adăugați-vă numele"
             name="name"
             required
           />
         </div>
         <div className="input-box">
-          <label>Email Address</label>
+          <label>Adresă Email</label>
           <input
             type="text"
             className="field"
-            placeholder="Enter your email"
+            placeholder="Adăugați-vă adresa de Email"
             name="email"
             required
           />
         </div>
         <div className="input-box">
-          <label>Your Message</label>
+          <label>Mesajul dvs.</label>
           <textarea
             name="message"
             id=""
             className="field message"
-            placeholder="Enter your message"
+            placeholder="Adăugați-vă mesajul pe care doriți să îl trimiteți"
             required
           ></textarea>
         </div>
-        <button type="submit">Send Message</button>
+        <button type="submit">Trimite mesaj</button>
       </form>
     </section>
   );
