@@ -1,22 +1,11 @@
 package com.stockspring.service;
 
-import com.stockspring.model.User;
-
-import java.util.List;
+import com.stockspring.dto.UserDTO;
 
 public interface UserService {
-    // Retrieve all users
-    List <User> getAllUsers();
+    // Register new user
+    void addUser(UserDTO userDTO);
 
-    // Retrieve a user by ID
-    User getUserById(Long id);
-
-    // Add new user
-    User addUser(User user);
-
-    // Update an existing user
-    User updateUser(User user);
-
-    // Delete an existing user
-    String deleteUser(User user);
+    // Check if the email exist
+    boolean existsByEmail(String email);
 }

@@ -1,37 +1,21 @@
-package com.stockspring.model;
+package com.stockspring.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "users", schema = "stockspring_schema")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class UserDTO {
     private Long id;
-
-    @Column(name = "username")
     private String username;
-
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "password_hash")
     private String password;
 
-    // Default constructor for JPA
-    public User() {}
-
-    // Manually added constructor with parameters
-    public User(Long id, String username, String email, String password) {
+    public UserDTO(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    // Getters and setters
+    public UserDTO() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -66,7 +50,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDTO{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +

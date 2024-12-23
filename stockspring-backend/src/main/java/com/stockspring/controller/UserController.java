@@ -1,55 +1,37 @@
 package com.stockspring.controller;
 
-
-import com.stockspring.model.User;
+import com.stockspring.dto.UserDTO;
 import com.stockspring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 @RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
-
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        return ResponseEntity.ok(userService.addUser(user));
-    }
-
-    @PatchMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") Long id){
-        User userObj = userService.getUserById(id);
-        if (userObj != null) {
-        userObj.setEmail(user.getEmail());
-        userObj.setUsername(user.getUsername());
-        userObj.setPassword(user.getPassword());
+    @PostMapping(path = "/register")
+    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+        if (userService.existsByEmail(userDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email is already in use!");
         }
-        return ResponseEntity.ok(userService.updateUser(user));
-    }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") Long id){
-
-        User userObj = userService.getUserById(id);
-        String deleteMsg = null;
-        if (userObj != null){
-            deleteMsg = userService.deleteUser(userObj);
+        try {
+            userService.addUser(userDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while registering the user: " + e.getMessage());
         }
-        return ResponseEntity.ok(deleteMsg);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User registered successfully!");
     }
 }
