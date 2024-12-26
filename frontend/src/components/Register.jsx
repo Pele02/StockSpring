@@ -24,7 +24,6 @@ const Register = () => {
       alert("Parolele nu se potrivesc!");
       return;
     }
-    // Handle the form submission logic here (e.g., API call)
     console.log(formData);
   };
 

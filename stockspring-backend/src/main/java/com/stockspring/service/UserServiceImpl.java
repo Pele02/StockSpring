@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService{
 
     //Check if the email exist
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
+    public boolean existsByUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
 }

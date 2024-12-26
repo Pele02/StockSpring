@@ -7,5 +7,5 @@ public interface UserService {
     void addUser(UserDTO userDTO);
 
     // Check if the email exist
-    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 }
