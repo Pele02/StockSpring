@@ -2,7 +2,6 @@ package com.stockspring.controller;
 
 import com.stockspring.dto.LoginDTO;
 import com.stockspring.dto.UserDTO;
-import com.stockspring.service.AuthenticationService;
 import com.stockspring.service.UserService;
 import com.stockspring.utility.JwtUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller class for managing user-related operations.
+ * <p>
+ *  This class handles user registration and login requests, providing necessary
+ *  endpoints for the StockSpring application.
+ * </p>
+ *
+ * <p>
+ *  Cross-origin requests are allowed for the frontend hosted on
+ *  <code>http://localhost:5173</code>.
+ * </p>
+ *
+ * @version 1.0
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class UserController {
@@ -23,9 +36,17 @@ public class UserController {
     @Autowired
     private JwtUtility jwtUtility;
 
-    @Autowired
-    private AuthenticationService authenticationService;
 
+    /**
+     * Registers a new user in the application.
+     *
+     * <p>
+     *     Check if there is a email, if not register new user
+     * </p>
+     *
+     * @param userDTO the data transfer object containing user registration details
+     * @return a {@link ResponseEntity} with an appropriate HTTP status and message
+     */
     @PostMapping(path = "/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
         if (userService.existsByUsername(userDTO.getEmail())) {
@@ -44,10 +65,21 @@ public class UserController {
                 .body("User registered successfully!");
     }
 
+    /**
+     * Log in user and generates a JWT token if successful.
+     *
+     * <p>
+     *     This method checks the username and password against stored credentials. If
+     *      authentication succeeds, a JWT token is generated and returned.
+     * </p>
+     *
+     * @param loginDTO the data transfer object containing user registration details
+     * @return a {@link ResponseEntity} with an appropriate HTTP status and message
+     */
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
         // Authenticate user (use your authentication service)
-        boolean isAuthenticated = authenticationService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
+        boolean isAuthenticated = userService.isAuthenticated(loginDTO.getUsername(), loginDTO.getPassword());
         if (!isAuthenticated) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
@@ -55,10 +87,6 @@ public class UserController {
         // Generate JWT
         String token = jwtUtility.generateToken(loginDTO.getUsername());
 
-        // Return token in the response
-//        return ResponseEntity.ok(new HashMap<String, String>() {{
-//            put("token", token);
-//        }});
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(loginDTO.getUsername() + " logged in successfully!");
     }

@@ -1,5 +1,14 @@
 package com.stockspring.dto;
 
+/**
+ * Data transfer object for user registration
+ * <p>
+ *  This class is used to encapsulate the username, email and password for
+ *  registration purposes in the application.
+ * </p>
+ *
+ * @version 1.0
+ */
 public class UserDTO {
     private Long id;
     private String username;

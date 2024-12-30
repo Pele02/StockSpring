@@ -2,6 +2,16 @@ package com.stockspring.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents a User entity in the StockSpring application.
+ * This class is mapped to the "users" table in the "stockspring_schema" database schema.
+ *
+ *  <p>
+ *  Each User has an auto-generated ID, a username, an email, and a hashed password.
+ *  </p>
+ *
+ *  @version 1.0
+ */
 @Entity
 @Table(name = "users", schema = "stockspring_schema")
 public class User {

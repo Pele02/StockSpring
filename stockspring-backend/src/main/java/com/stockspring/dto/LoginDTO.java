@@ -1,5 +1,14 @@
 package com.stockspring.dto;
 
+/**
+ * Data Transfer Object (DTO) for handling user login information.
+ * <p>
+ *  This class is used to encapsulate the username and password for
+ *  authentication purposes in the application.
+ * </p>
+ *
+ * @version 1.0
+ */
 public class LoginDTO {
     private String username;
     private String password;
