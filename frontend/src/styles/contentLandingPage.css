@@ -1,3 +1,5 @@
+@import "./index.css";
+
 /* Container for header */
 .header-text {
     padding-top: 90px;
@@ -79,6 +81,7 @@ ul.list-unstyled li::before {
     margin: 0 10px;
   }
   
+
 
 
 

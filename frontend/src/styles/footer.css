@@ -1,0 +1,38 @@
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: #FFFFFF;
+	padding: 20px 10px;
+	width: 100%;
+	margin-top: auto;
+}
+
+footer p {
+	margin: 10px 0;
+	font-size: 14px;
+}
+
+footer .btn-link {
+	color: #00ADB5;
+	font-size: 14px;
+	text-decoration: none;
+	margin: 0 5px;
+	padding: 5px 10px;
+	transition: color 0.3s, background-color 0.3s;
+}
+
+footer span {
+	color: #FFFFFF;
+	margin: 0 10px;
+}
+
+@media (max-width: 768px) {
+	footer {
+		font-size: 12px;
+		text-align: center;
+	}
+	.btn-link {
+		padding: 5px;
+	}
+}

@@ -1,0 +1,13 @@
+html{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+footer{
+    align-items: flex-end;
+    flex-flow: column wrap;
+    position: absolute; 
+    bottom: 0; 
+}

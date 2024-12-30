@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
+import "../styles/footer.css";
 
 const Footer = () => {
   const [showPolicyModal, setShowPolicyModal] = useState(false);
@@ -20,7 +21,7 @@ const Footer = () => {
           >
             Politica de Confidențialitate
           </button>
-          <span className="text-light" style={{ marginTop: "-6px" }}>
+          <span className="text-light" style={{ marginTop: "3px" }}>
             |
           </span>
           <button
