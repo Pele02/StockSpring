@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../styles/register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    prenume: "",
-    nume: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -18,44 +18,43 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the form from submitting and refreshing the page
+
     if (formData.password !== formData.confirmPassword) {
       alert("Parolele nu se potrivesc!");
       return;
     }
-    console.log(formData);
+
+    // Send the data to the backend when the button is clicked
+    try {
+      const response = await axios.post(
+        "http://localhost:8081/register",
+        formData
+      );
+      console.log(response.data); // Handle the response from the backend
+      alert("Registrare reușită!");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("A apărut o eroare la înregistrare.");
+    }
   };
 
   return (
     <section className="register">
       <h2 className="header">StockSpring</h2>
       <form onSubmit={handleSubmit}>
-        <div className="input-name">
-          <div className="input-box prenume">
-            <label htmlFor="prenume">Prenume</label>
-            <input
-              type="text"
-              className="field"
-              placeholder="Adăugați-vă prenumele"
-              name="prenume"
-              value={formData.prenume}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="input-box nume">
-            <label htmlFor="nume">Nume</label>
-            <input
-              type="text"
-              className="field"
-              placeholder="Adăugați-vă numele de familie"
-              name="nume"
-              value={formData.nume}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="input-box username">
+          <label htmlFor="username">Nume de Utilizator</label>
+          <input
+            type="text"
+            className="field"
+            placeholder="Adăugați-vă numele de utilizator"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="input-box">
           <label htmlFor="email">Adresă Email</label>
