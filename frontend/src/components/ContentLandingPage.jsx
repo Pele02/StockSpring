@@ -9,7 +9,7 @@ const ContentLandingPage = () => {
     <>
       <div className="container-fluid">
         <div className="row">
-          <div className="col">
+          <div className="col write">
             <div className="header-text">
               <h1>Urmărește investițiile tale</h1>
               <p>simplu și rapid cu ajutorul nostru</p>
@@ -43,7 +43,7 @@ const ContentLandingPage = () => {
             </div>
           </div>
 
-          <div className="col">
+          <div className="col image">
             <img
               src={landingPageImg}
               className=" .img-fluid. max-width: 100%"
