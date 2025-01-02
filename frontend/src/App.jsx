@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import SupportPage from "./pages/SupportPage";
 import FunctionalityPage from "./pages/FunctionalityPage";
+import DashboardPage from "./pages/DashboardPage";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/support" element={<SupportPage />} />
         <Route path="/functionality" element={<FunctionalityPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </Router>
   );

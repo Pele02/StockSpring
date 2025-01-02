@@ -32,7 +32,7 @@ const ContactForm = () => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Something went wrong!",
+          text: "Ceva nu a mers bine, încearcă din nou!",
         });
         setResult(data.message);
       }

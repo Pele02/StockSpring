@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/register.css";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -22,7 +27,11 @@ const Register = () => {
     e.preventDefault(); // Prevent the form from submitting and refreshing the page
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Parolele nu se potrivesc!");
+      Swal.fire({
+        icon: "error",
+        title: "Parolele nu se potrivesc!",
+        text: "Te rugăm să verifici parolele.",
+      });
       return;
     }
 
@@ -33,12 +42,31 @@ const Register = () => {
         formData
       );
       console.log(response.data); // Handle the response from the backend
-      alert("Registrare reușită!");
+      Swal.fire({
+        icon: "success",
+        title: "Registrare reușită!",
+        text: "Contul tău a fost creat cu succes. Acum te poți conecta!",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to login page or another page
+          navigate("/login");
+        }
+      });
     } catch (error) {
       console.error("Error:", error.response.data);
       if (error.response.data.includes("already exists"))
-        alert("Numele de utilizator sau emailul este folosit!");
-      else alert("A apărut o eroare la înregistrare.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Numele de utilizator sau emailul este folosit!",
+        });
+      else
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "A apărut o eroare la înregistrare!",
+        });
     }
   };
 
