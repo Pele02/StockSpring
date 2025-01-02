@@ -93,7 +93,9 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit">Înregistrare</button>
+        <button id="register" type="submit">
+          Înregistrare
+        </button>
       </form>
     </section>
   );
