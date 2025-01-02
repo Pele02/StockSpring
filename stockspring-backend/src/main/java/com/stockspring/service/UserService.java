@@ -30,6 +30,14 @@ public interface UserService {
     boolean existsByUsername(String username);
 
     /**
+     * Check if the email is in the database.
+     *
+     * @param email the username to check
+     * @return {@code true} if the username exists, {@code false} otherwise
+     */
+    boolean existsByEmail(String email);
+
+    /**
      * Verifies if the provided username and password match a registered user.
      *
      * @param username the username to authenticate

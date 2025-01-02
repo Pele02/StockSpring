@@ -35,8 +35,10 @@ const Register = () => {
       console.log(response.data); // Handle the response from the backend
       alert("Registrare reușită!");
     } catch (error) {
-      console.error("Error:", error);
-      alert("A apărut o eroare la înregistrare.");
+      console.error("Error:", error.response.data);
+      if (error.response.data.includes("already exists"))
+        alert("Numele de utilizator sau emailul este folosit!");
+      else alert("A apărut o eroare la înregistrare.");
     }
   };
 
@@ -45,7 +47,7 @@ const Register = () => {
       <h2 className="header">StockSpring</h2>
       <form onSubmit={handleSubmit}>
         <div className="input-box username">
-          <label htmlFor="username">Nume de Utilizator</label>
+          <label htmlFor="username">Numele de utilizator</label>
           <input
             type="text"
             className="field"

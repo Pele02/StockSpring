@@ -59,6 +59,17 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
+     * Checks if a user with the given username exists in the database.
+     *
+     * @param email the username to check
+     * @return {@code true} if the username exists, {@code false} otherwise
+     */
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    /**
      * Authenticates a user by verifying the provided password matches the stored password.
      * <p>
      * This method fetches the user by username and uses {@link PasswordEncoder} to compare

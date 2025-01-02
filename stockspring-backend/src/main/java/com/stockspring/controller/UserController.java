@@ -7,6 +7,7 @@ import com.stockspring.utility.JwtUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,9 +48,15 @@ public class UserController {
      * @param userDTO the data transfer object containing user registration details
      * @return a {@link ResponseEntity} with an appropriate HTTP status and message
      */
+    @Transactional
     @PostMapping(path = "/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
-        if (userService.existsByUsername(userDTO.getEmail())) {
+        if (userService.existsByUsername(userDTO.getUsername())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Username is already in use!");
+        }
+
+        if (userService.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Email is already in use!");
         }
