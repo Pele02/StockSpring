@@ -1,4 +1,4 @@
-package com.stockspring.model;
+package com.stockspring.entity;
 
 import jakarta.persistence.*;
 

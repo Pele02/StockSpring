@@ -45,4 +45,22 @@ public interface UserService {
      * @return {@code true} if the credentials are valid, {@code false} otherwise
      */
     boolean isAuthenticated(String username, String password);
+
+    /**
+     * Sends an email to the user to reset the password
+     *
+     * @param email the email of the user
+     * @return {@code true} if the email exists and the reset request is send, {@code false} if the email is not found or the process fails
+     */
+    boolean sendPasswordResetEmail(String email);
+
+    /**
+     * Implements the body format of the reset email
+     *
+     * @param email email of the user
+     * @param resetLink
+     */
+    void sendResetEmail(String email, String resetLink);
+
+    boolean resetPassword(String token, String newPassword);
 }

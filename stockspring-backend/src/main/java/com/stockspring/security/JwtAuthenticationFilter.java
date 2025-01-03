@@ -55,6 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+        // Skip token validation for password reset
+        if (request.getRequestURI().equals("/forgot-password")) {
+            filterChain.doFilter(request, response); // Allow the request to proceed without validation
+            return;
+        }
+
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
             username = jwtUtility.extractUsername(token);

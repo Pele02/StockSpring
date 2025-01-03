@@ -52,7 +52,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for development (enable in production with proper setup)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login").permitAll() // Allow public access to /register and /login
+                        .requestMatchers("/register", "/login", "/forgot-password", "/reset-password").permitAll() // Allow public access to /register and /login
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                 .httpBasic(AbstractHttpConfigurer::disable) // Disable HTTP Basic Authentication if not needed
