@@ -9,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import SupportPage from "./pages/SupportPage";
 import FunctionalityPage from "./pages/FunctionalityPage";
 import DashboardPage from "./pages/DashboardPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/support" element={<SupportPage />} />
         <Route path="/functionality" element={<FunctionalityPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
     </Router>
   );
