@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller class for managing user-related operations.
@@ -96,5 +93,29 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(loginDTO.getUsername() + " logged in successfully!");
+    }
+
+    // Endpoint to request a password reset email
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> resetPasswordRequest(@RequestParam String email) {
+        boolean isEmailSent = userService.sendPasswordResetEmail(email);
+
+        if (isEmailSent) {
+            return ResponseEntity.ok("Password reset email sent successfully.");
+        } else {
+            return ResponseEntity.status(404).body("Email not found.");
+        }
+    }
+
+    // Endpoint to reset the password using the token
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        boolean isPasswordReset = userService.resetPassword(token, newPassword);
+
+        if (isPasswordReset) {
+            return ResponseEntity.ok("Password reset successfully.");
+        } else {
+            return ResponseEntity.status(400).body("Invalid or expired token.");
+        }
     }
 }
