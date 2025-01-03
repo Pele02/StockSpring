@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/register.css";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {

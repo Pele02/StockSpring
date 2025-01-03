@@ -1,0 +1,120 @@
+/* Overall page style */
+.login-container {
+    background: #f9fafb; /* Light gray background */
+    color: #3f4254;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Header style */
+  .login-header {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1d2a4d;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+  
+  /* Form container */
+  .login-form {
+    background: #fff; /* White form background */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px 30px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Input Box */
+  .login-input-box {
+    margin-bottom: 20px;
+  }
+  
+  .login-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .login-field {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .login-field:focus {
+    border-color: #007bff; /* Blue border on focus */
+  }
+  
+  /* Error Message */
+  .login-error-message {
+    color: #d9534f;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Button style */
+  .login-btn {
+    background-color: #00ADB5; /* Vibrant teal button */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  
+  .login-btn:hover {
+    background-color: #16314b; /* Dark blue on hover */
+  }
+  
+  .login-btn:focus {
+    outline: none;
+  }
+  
+  /* Forgot Password Link */
+  .login-forgot-password {
+    display: block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #1d2a4d;
+    text-decoration: none;
+  }
+  
+  .login-forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive header adjustments */
+  @media (max-height: 800px) {
+    .login-header {
+      margin-bottom: -17px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .login-header {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+  }
+  
