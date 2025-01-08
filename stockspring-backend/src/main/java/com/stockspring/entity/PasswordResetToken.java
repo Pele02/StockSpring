@@ -4,6 +4,14 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+ /**
+ * Entity representing a password reset token.
+ *
+ * <p>Used to manage password reset requests by associating a unique token
+ * with a specific user and an expiration date.</p>
+ *
+ *  @version 1.0
+ */
 @Entity
 public class PasswordResetToken {
 

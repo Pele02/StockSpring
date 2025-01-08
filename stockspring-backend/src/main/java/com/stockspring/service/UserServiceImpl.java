@@ -7,6 +7,7 @@ import com.stockspring.repository.PasswordResetTokenRepository;
 import com.stockspring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -107,10 +108,16 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * Sends an email to the user to reset the password
+     * Sends a password reset email to the user if the provided email exists in the system.
+     *<p>
+     * This method generates a unique password reset token, associates it with the user,
+     * and sets an expiration time for the token. The token is then saved to the database
+     * and a reset email is sent to the user containing a link to reset their password.
+     *</p>
      *
-     * @param email the email of the user
-     * @return {@code true} if the email exists and the reset request is send, {@code false} if the email is not found or the process fails
+     * @param email the email address of the user requesting a password reset
+     * @return {@code true} if the email exists and the reset email is sent successfully;
+     *         {@code false} if the email is not found or the process fails
      */
     @Override
     public boolean sendPasswordResetEmail(String email) {
@@ -142,10 +149,24 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * Implements the body format of the reset email
+     * Sends a password reset email to the specified user.
+     *<p>
+     * This method constructs the email content, including the subject and body,
+     * and sends it using the configured JavaMailSender. The reset link provided
+     * should allow the user to reset their password.
+     *</p>
      *
-     * @param email     email of the user
-     * @param resetLink
+     * @param email the recipient's email address
+     * @param resetLink the unique link to reset the user's password
+     *
+     * @throws MailException if an error occurs while sending the email
+     *
+     * Example:
+     * <pre>{@code
+     * String email = "user@example.com";
+     * String resetLink = "http://example.com/reset-password?token=abc123";
+     * emailService.sendResetEmail(email, resetLink);
+     * }</pre>
      */
     @Override
     public void sendResetEmail(String email, String resetLink) {
@@ -159,9 +180,22 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * @param token
-     * @param newPassword
-     * @return
+     * Resets the user's password using a valid password reset token.
+     *<p>
+     * This method verifies the provided reset token and updates the user's password
+     * if the token is valid and has not expired. After successfully resetting the
+     * password, the token is removed from the database to prevent reuse.
+     *</p>
+     *
+     * @param token the unique password reset token associated with the user
+     * @param newPassword the new password to be set for the user
+     * @return {@code true} if the password was successfully reset; {@code false} otherwise
+     *
+     * Security Notes:
+     * - The new password is securely hashed using a password encoder before being saved.
+     * - Expired or invalid tokens are not accepted to ensure security.
+     *
+     * @throws IllegalArgumentException if token or newPassword is null or empty
      */
     @Override
     public boolean resetPassword(String token, String newPassword) {

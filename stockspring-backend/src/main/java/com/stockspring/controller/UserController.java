@@ -95,7 +95,17 @@ public class UserController {
                 .body(loginDTO.getUsername() + " logged in successfully!");
     }
 
-    // Endpoint to request a password reset email
+    /**
+     * Endpoint to request a password reset email.
+     *<p>
+     *     This methode sends an email to the User that requested the password reset if the User
+     *     is in the database.
+     *</p>
+     *
+     * @param email the email address of the user requesting a password reset
+     * @return a {@link ResponseEntity} with a success message if the email was sent,
+     *         or a 404 status if the email is not associated with any user
+     */
     @PostMapping("/forgot-password")
     public ResponseEntity<String> resetPasswordRequest(@RequestParam String email) {
         boolean isEmailSent = userService.sendPasswordResetEmail(email);
@@ -107,7 +117,17 @@ public class UserController {
         }
     }
 
-    // Endpoint to reset the password using the token
+    /**
+     * Endpoint to reset the user's password using a reset token.
+     *<p>
+     *     The User has a given time to reset his password.
+     *</p>
+     *
+     * @param token the reset token provided to the user
+     * @param newPassword the new password to set for the user
+     * @return a {@link ResponseEntity} with a success message if the password was reset,
+     *         or a 400 status if the token is invalid or expired
+     */
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
         boolean isPasswordReset = userService.resetPassword(token, newPassword);
@@ -118,4 +138,5 @@ public class UserController {
             return ResponseEntity.status(400).body("Invalid or expired token.");
         }
     }
+
 }
