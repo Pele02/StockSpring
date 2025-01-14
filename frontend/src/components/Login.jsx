@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "../styles/login.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -42,7 +45,7 @@ const Login = () => {
         text: "Bine ai venit în contul tău!",
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = "/dashboard";
+          navigate("/dashboard");
         }
       });
     } catch (error) {
@@ -97,10 +100,8 @@ const Login = () => {
           Conectează-te
         </button>
 
-        <Link>
-          <a to="/forgot-password" className="login-forgot-password">
-            Ai uitat parola?
-          </a>
+        <Link to="/forgot-password" className="login-forgot-password">
+          Ai uitat parola?
         </Link>
       </form>
     </section>

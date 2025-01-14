@@ -40,7 +40,7 @@ const Register = () => {
         "http://localhost:8081/register",
         formData
       );
-      console.log(response.data); // Handle the response from the backend
+
       Swal.fire({
         icon: "success",
         title: "Registrare reușită!",
@@ -48,13 +48,12 @@ const Register = () => {
         confirmButtonText: "OK",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Redirect to login page or another page
           navigate("/login");
         }
       });
     } catch (error) {
       console.error("Error:", error.response.data);
-      if (error.response.data.includes("already exists"))
+      if (error.response.data.includes("already in"))
         Swal.fire({
           icon: "error",
           title: "Oops...",

@@ -39,7 +39,7 @@ public class UserController {
      * Registers a new user in the application.
      *
      * <p>
-     *     Check if there is a email, if not register new user
+     *     Check if there is already registered the email and user, if they are not registered, create new user.
      * </p>
      *
      * @param userDTO the data transfer object containing user registration details
@@ -48,25 +48,22 @@ public class UserController {
     @Transactional
     @PostMapping(path = "/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
-        if (userService.existsByUsername(userDTO.getUsername())) {
+        if (userService.existsByUsername(userDTO.getUsername()) || userService.existsByEmail(userDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Username is already in use!");
-        }
-
-        if (userService.existsByEmail(userDTO.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Email is already in use!");
+                    .body("The username or email is already in use!");
         }
 
         try {
+            // Add the user to the database
             userService.addUser(userDTO);
+
+            // Return the token in the response body
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("User registered successfully! Please log in.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while registering the user: " + e.getMessage());
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("User registered successfully!");
     }
 
     /**
@@ -91,8 +88,8 @@ public class UserController {
         // Generate JWT
         String token = jwtUtility.generateToken(loginDTO.getUsername());
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(loginDTO.getUsername() + " logged in successfully!");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("{\"token\": \"" + token + "\"}");
     }
 
     /**
@@ -138,5 +135,6 @@ public class UserController {
             return ResponseEntity.status(400).body("Invalid or expired token.");
         }
     }
+
 
 }
