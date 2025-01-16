@@ -86,4 +86,12 @@ public interface UserService {
      * @return {@code true} if the password was successfully reset; {@code false} otherwise
      */
     boolean resetPassword(String token, String newPassword);
+
+    /**
+     * Deletes the user from the database.
+     *
+     * @param username the username of the user to delete
+     * @return {@code true} if the user was successfully deleted; {@code false} otherwise
+     */
+    boolean deleteUser(String username);
 }

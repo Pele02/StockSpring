@@ -37,7 +37,7 @@ const Register = () => {
     // Send the data to the backend when the button is clicked
     try {
       const response = await axios.post(
-        "http://localhost:8081/register",
+        "http://localhost:8081/auth/register",
         formData
       );
 

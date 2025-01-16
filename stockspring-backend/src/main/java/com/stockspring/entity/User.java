@@ -2,6 +2,8 @@ package com.stockspring.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 /**
  * Represents a User entity in the StockSpring application.
  * This class is mapped to the "users" table in the "stockspring_schema" database schema.
@@ -29,6 +31,10 @@ public class User {
 
     @Column(name = "password_hash")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<PasswordResetToken> passwordResetTokens;
+
 
     // Default constructor for JPA
     public User() {}

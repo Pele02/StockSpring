@@ -1,9 +1,11 @@
 package com.stockspring.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.stockspring.dto.LoginDTO;
 import com.stockspring.dto.UserDTO;
 import com.stockspring.service.UserService;
 import com.stockspring.utility.JwtUtility;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @version 1.0
  */
+@RequestMapping("/auth")
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class UserController {
@@ -136,5 +139,28 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/delete-account")
+   public ResponseEntity<String> deleteAccount(@RequestBody String jsonToken) throws JsonProcessingException {
+        JSONObject jsonObject = new JSONObject(jsonToken);
+        String token = jsonObject.getString("token");
+
+    try {
+        // Extract username from token
+        String username = jwtUtility.extractUsername(token);
+
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
+
+        // Delete user account
+        if (userService.deleteUser(username)) {
+            return ResponseEntity.ok("Account deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete account");
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+    }
+}
 
 }
