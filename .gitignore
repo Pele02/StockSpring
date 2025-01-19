@@ -3,3 +3,4 @@ frontend/.env
 stockspring-backend/src/main/resources/application.properties
 stockspring-backend/src/main/resources/application.properties
 *.properties
+stockspring-backend/.env
