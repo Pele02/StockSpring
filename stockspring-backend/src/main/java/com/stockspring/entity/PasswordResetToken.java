@@ -1,6 +1,9 @@
 package com.stockspring.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -13,6 +16,9 @@ import java.util.Date;
  *  @version 1.0
  */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PasswordResetToken {
 
     @Id
@@ -29,43 +35,9 @@ public class PasswordResetToken {
     @Column(nullable = false)
     private Date expiryDate;
 
-    public PasswordResetToken() {}
-
-    public PasswordResetToken(String token, User user, Date expiryDate) {
-        this.token = token;
-        this.user = user;
-        this.expiryDate = expiryDate;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+     public PasswordResetToken(String token, User user, Date expiryDate) {
+         this.token = token;
+         this.user = user;
+         this.expiryDate = expiryDate;
+     }
 }

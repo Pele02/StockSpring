@@ -2,14 +2,14 @@ package com.stockspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.stockspring.dto.LoginDTO;
-import com.stockspring.dto.UserDTO;
+import com.stockspring.dto.RegisterDTO;
 import com.stockspring.service.UserService;
 import com.stockspring.utility.JwtUtility;
 import org.json.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * <p>
  *  Cross-origin requests are allowed for the frontend hosted on
- *  <code>http://localhost:5173</code>.
+ *  <code><a href="http://localhost:5173"></a></code>.
  * </p>
  *
  * @version 1.0
@@ -37,6 +37,9 @@ public class UserController {
     @Autowired
     private JwtUtility jwtUtility;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     /**
      * Registers a new user in the application.
@@ -45,20 +48,19 @@ public class UserController {
      *     Check if there is already registered the email and user, if they are not registered, create new user.
      * </p>
      *
-     * @param userDTO the data transfer object containing user registration details
+     * @param registerDTO the data transfer object containing user registration details
      * @return a {@link ResponseEntity} with an appropriate HTTP status and message
      */
-    @Transactional
     @PostMapping(path = "/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
-        if (userService.existsByUsername(userDTO.getUsername()) || userService.existsByEmail(userDTO.getEmail())) {
+    public ResponseEntity<String> registerUser(@RequestBody RegisterDTO registerDTO) {
+        if (userService.existsByUsername(registerDTO.getUsername()) || userService.existsByEmail(registerDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("The username or email is already in use!");
         }
 
         try {
             // Add the user to the database
-            userService.addUser(userDTO);
+            userService.addUser(registerDTO);
 
             // Return the token in the response body
             return ResponseEntity.status(HttpStatus.CREATED)

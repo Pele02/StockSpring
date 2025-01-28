@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Data Transfer Object (DTO) for handling user login information.
+ * Data transfer object for user registration
  * <p>
- *  This class is used to encapsulate the username and password for
- *  authentication purposes in the application.
+ *  This class is used to encapsulate the username, email and password for
+ *  registration purposes in the application.
  * </p>
  *
  * @version 1.0
@@ -16,8 +16,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDTO {
+public class RegisterDTO {
+    private Long id;
+
     private String username;
+
+    private String email;
 
     private String password;
 

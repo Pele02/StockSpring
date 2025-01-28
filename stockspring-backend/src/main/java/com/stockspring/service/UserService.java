@@ -1,6 +1,6 @@
 package com.stockspring.service;
 
-import com.stockspring.dto.UserDTO;
+import com.stockspring.dto.RegisterDTO;
 
 /**
  * Service interface for managing user-related operations.
@@ -17,9 +17,9 @@ public interface UserService {
     /**
      * Register new user.
      *
-     * @param userDTO the {@link UserDTO} containing the user's details
+     * @param registerDTO the {@link RegisterDTO} containing the user's details
      */
-    void addUser(UserDTO userDTO);
+    void addUser(RegisterDTO registerDTO);
 
     /**
      * Check if the username is in the database.
