@@ -1,5 +1,6 @@
 package com.stockspring.service;
 
+import com.stockspring.dto.LoginDTO;
 import com.stockspring.dto.RegisterDTO;
 
 /**
@@ -44,7 +45,7 @@ public interface UserService {
      * @param password the password associated with the username
      * @return {@code true} if the credentials are valid, {@code false} otherwise
      */
-    boolean isAuthenticated(String username, String password);
+    boolean isAuthenticated(LoginDTO loginDTO);
 
     /**
      * Sends a password reset email to the user if the provided email exists in the system.

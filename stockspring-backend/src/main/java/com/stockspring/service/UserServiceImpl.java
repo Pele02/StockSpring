@@ -1,6 +1,7 @@
 // UserServiceImpl.java
 package com.stockspring.service;
 
+import com.stockspring.dto.LoginDTO;
 import com.stockspring.dto.RegisterDTO;
 import com.stockspring.entity.PasswordResetToken;
 import com.stockspring.entity.User;
@@ -57,9 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isAuthenticated(String username, String password) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        return user != null && passwordEncoder.matches(password, user.getPassword());
+    public boolean isAuthenticated(LoginDTO loginDTO) {
+        User user = userRepository.findByUsername(loginDTO.getUsername()).orElse(null);
+        return user != null && passwordEncoder.matches(loginDTO.getPassword(), user.getPassword());
     }
 
     @Override
