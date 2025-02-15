@@ -19,25 +19,25 @@ public class StockPrice {
     @SequenceGenerator(name = "stock_price_seq", sequenceName = "stock_price_seq", allocationSize = 1)
     private Long stockPriceId;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "open_price", nullable = false)
+    @Column(name = "open_price")
     private Double openPrice;
 
-    @Column(name = "close_price", nullable = false)
+    @Column(name = "close_price")
     private Double closePrice;
 
-    @Column(name = "high_price", nullable = false)
+    @Column(name = "high_price")
     private Double highPrice;
 
-    @Column(name = "low_price", nullable = false)
+    @Column(name = "low_price")
     private Double lowPrice;
 
-    @Column(name = "volume", nullable = false)
+    @Column(name = "volume")
     private Long volume;
 
     @ManyToOne
-    @JoinColumn(name = "stock_id", nullable = false)
+    @JoinColumn(name = "stock_id")
     private Stock stock;
 }

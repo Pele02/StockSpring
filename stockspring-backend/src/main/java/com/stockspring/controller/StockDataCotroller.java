@@ -1,12 +1,13 @@
 package com.stockspring.controller;
 
+import com.stockspring.dto.StockDTO;
 import com.stockspring.service.StockDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Controller class for managing stock data-related operations.
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  */
 @RestController
+@RequestMapping("/stocks")
 @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class StockDataCotroller {
 
@@ -57,6 +59,20 @@ public class StockDataCotroller {
         return ResponseEntity.ok(companyNews);
         } catch (Exception e){
             return ResponseEntity.status(500).body("An error occurred while fetching the latest news on " + ticker + ": " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{symbol}")
+    public ResponseEntity<?> getStockData(@PathVariable String symbol) {
+        try {
+            StockDTO stockDTO = stockDataService.getStockData(symbol.toUpperCase());
+            return stockDTO != null ?
+                    ResponseEntity.ok(stockDTO) :
+                    ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(Map.of("message", "Stock data not found for symbol: " + symbol));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
         }
     }
 }

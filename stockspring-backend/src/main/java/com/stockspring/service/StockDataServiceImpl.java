@@ -1,14 +1,14 @@
 package com.stockspring.service;
 
+import com.stockspring.dto.StockDTO;
+import com.stockspring.entity.Stock;
+import com.stockspring.repository.StockRepository;
 import com.stockspring.utility.ApiKey;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.Optional;
 
 /**
  * Implementation of the StockDataService interface.
@@ -21,6 +21,15 @@ public class StockDataServiceImpl implements StockDataService{
     private static final String baseFinnhubURL = "https://finnhub.io/api/v1/";
     private static final String baseNewsURL = "https://newsapi.org/v2/";
 
+    @Autowired
+    StockRepository stockRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
+    ExternalStockApiService externalStockApiService;
+
     /**
      * Fetches the latest news related to stocks.
      *
@@ -29,51 +38,50 @@ public class StockDataServiceImpl implements StockDataService{
      */
     @Override
     public String getLatestNews(){
-        try {
-            HttpClient httpClient = HttpClient.newHttpClient();
+        return externalStockApiService.getLatestNews();
 
-            HttpRequest getNewsRequest = HttpRequest.newBuilder()
-                    .uri(new URI(baseNewsURL + "everything?q=stocks&apiKey=" + newsKey))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(getNewsRequest, HttpResponse.BodyHandlers.ofString());
-
-            // Checking for a successful response
-            if (response.statusCode() == 200) {
-                return response.body();  // Returning the news data as a string
-            } else {
-                return "Error: Unable to fetch the latest news. HTTP status code: " + response.statusCode();
-            }
-        } catch (URISyntaxException | IOException | InterruptedException e) {
-            return "Error: " + e.getMessage();
-        }
     }
 
     /**
      * Fetches the latest news related to a specified stock.
      *
-     * @param ticker
+     * @param ticker the stock ticker symbol
+     *
      * @return a string containing the latest news data of a company if the request is successful;
      * an error message if the request fails
      */
     @Override
     public String getCompanyNews(String ticker) {
-        try {
-        HttpClient httpClient = HttpClient.newHttpClient();
 
-        HttpRequest getCompanyNewsRequest = HttpRequest.newBuilder()
-                .uri(new URI(baseNewsURL + "everything?q=" + ticker + "&apiKey=" + newsKey))
-                .build();
+        return externalStockApiService.getCompanyNews(ticker);
 
-            HttpResponse<String> response = httpClient.send(getCompanyNewsRequest, HttpResponse.BodyHandlers.ofString());
-            // Checking for a successful response
-            if (response.statusCode() == 200) {
-                return response.body();  // Returning the news data as a string
-            } else {
-                return "Error: Unable to fetch the latest news. HTTP status code: " + response.statusCode();
-            }
-            } catch (URISyntaxException | IOException | InterruptedException e) {
-                return "Error: " + e.getMessage();
-            }
     }
+
+    /**
+     * Fetches the latest stock data.
+     *
+     * @param symbol the stock ticker symbol
+     * @return a string containing the latest stock data if the request is successful;
+     * an error message if the request fails
+     */
+    @Override
+    public StockDTO getStockData(String symbol) {
+
+        Optional<Stock> stock = stockRepository.findBySymbol(symbol);
+
+        if (stock.isPresent()) {
+            return modelMapper.map(stock.get(), StockDTO.class);
+        }
+
+        StockDTO stockDTO = externalStockApiService.fetchStockData(symbol);
+        if (stockDTO != null) {
+            // Save the new stock data to the database
+            Stock newStock = modelMapper.map(stockDTO, Stock.class);
+            stockRepository.save(newStock);
+        }
+
+        return stockDTO;
+
+    }
+
 }

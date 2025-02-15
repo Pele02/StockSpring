@@ -21,7 +21,9 @@ import java.util.Set;
  * @version 1.0
  */
 @Entity
-@Table(name = "stocks", schema = "stockspring_schema")
+@Table(name = "stocks", schema = "stockspring_schema", indexes = {
+        @Index(name = "idx_symbol", columnList = "symbol")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,11 +41,8 @@ public class Stock {
     @Column(name = "company_name", nullable = false)
     private String companyName;
 
-    @Column(name = "current_price", nullable = false)
-    private Double currentPrice;
-
     @Column(name = "market_cap", nullable = false)
-    private Double marketCap;
+    private Long marketCap;
 
     @Column(name = "sector", nullable = false)
     private String sector;

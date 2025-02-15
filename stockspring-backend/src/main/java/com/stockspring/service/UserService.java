@@ -41,8 +41,8 @@ public interface UserService {
     /**
      * Verifies if the provided username and password match a registered user.
      *
-     * @param username the username to authenticate
-     * @param password the password associated with the username
+     * @param loginDTO the username to authenticate
+     *
      * @return {@code true} if the credentials are valid, {@code false} otherwise
      */
     boolean isAuthenticated(LoginDTO loginDTO);
