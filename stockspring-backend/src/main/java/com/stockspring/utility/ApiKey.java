@@ -19,4 +19,8 @@ public class ApiKey {
         return dotenv.get("FMP_API_KEY");
     }
 
+    public static String getPolygonAPIKey(){
+        return dotenv.get("POLYGON_API_KEY");
+    }
+
 }

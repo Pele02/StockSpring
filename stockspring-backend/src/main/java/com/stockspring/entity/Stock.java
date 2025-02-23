@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,25 +42,22 @@ public class Stock {
     @Column(name = "company_name", nullable = false)
     private String companyName;
 
-    @Column(name = "market_cap", nullable = false)
-    private Long marketCap;
-
     @Column(name = "sector", nullable = false)
     private String sector;
 
-    @Column(name = "pe_ratio", nullable = false)
-    private Double peRatio;
+    @Column(name = "industry", nullable = false)
+    private String industry;
 
-    @Column(name = "dividend_yield", nullable = true)
-    private Double dividendYield;
-
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PortfolioStock> portfolioStocks;
+    @Column(name = "description", nullable = false, length = 10000)
+    private String description;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<StockPrice> stockPrices;
+    private Set<PortfolioStock> portfolioStocks = new HashSet<>();
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Dividend> dividendHistory =new ArrayList<>();
+    private Set<StockDetails> stockDetails = new HashSet<>();
+
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dividend> dividend =new ArrayList<>();
 
 }

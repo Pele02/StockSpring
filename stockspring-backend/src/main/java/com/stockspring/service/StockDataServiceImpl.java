@@ -3,7 +3,6 @@ package com.stockspring.service;
 import com.stockspring.dto.StockDTO;
 import com.stockspring.entity.Stock;
 import com.stockspring.repository.StockRepository;
-import com.stockspring.utility.ApiKey;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +15,6 @@ import java.util.Optional;
  */
 @Service
 public class StockDataServiceImpl implements StockDataService{
-    private static final String finnhubKey = ApiKey.getFinnhubAPIKey();
-    private static final String newsKey = ApiKey.getNewsAPIKey();
-    private static final String baseFinnhubURL = "https://finnhub.io/api/v1/";
-    private static final String baseNewsURL = "https://newsapi.org/v2/";
 
     @Autowired
     StockRepository stockRepository;
@@ -73,14 +68,7 @@ public class StockDataServiceImpl implements StockDataService{
             return modelMapper.map(stock.get(), StockDTO.class);
         }
 
-        StockDTO stockDTO = externalStockApiService.fetchStockData(symbol);
-        if (stockDTO != null) {
-            // Save the new stock data to the database
-            Stock newStock = modelMapper.map(stockDTO, Stock.class);
-            stockRepository.save(newStock);
-        }
-
-        return stockDTO;
+        return externalStockApiService.fetchStockData(symbol);
 
     }
 

@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "dividend_history", schema = "stockspring_schema")
+@Table(name = "dividends", schema = "stockspring_schema")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,14 +18,24 @@ public class Dividend {
     @Column(name = "dividend_id")
     private Long dividendId;
 
+    @Column(name = "dividend_yield", nullable = false)
+    private Double dividendYield;
+
     @Column(name="ex_dividend_date", nullable = false)
-    private LocalDate exDividendDate;
+    private String exDividendDate;
 
     @Column(name="payment_date", nullable = false)
-    private LocalDate  paymentDate;
+    private String  paymentDate;
 
-    @Column(name="dividend_amount", nullable = false)
-    private Double dividendAmount;
+    @Column(name="dividend_per_share", nullable = false)
+    private Double dividendPerShare;
+
+    @Column(name="payout_ratio", nullable = false)
+    private Double payoutRatio;
+
+    @Column(name="dividend_growth_five_years", nullable = false)
+    private Double dividendGrowthFiveYears;
+
 
     @ManyToOne
     @JoinColumn(name = "stock_id", nullable = false)
