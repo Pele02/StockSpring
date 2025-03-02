@@ -55,7 +55,7 @@ public class Stock {
     private Set<PortfolioStock> portfolioStocks = new HashSet<>();
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<StockDetails> stockDetails = new HashSet<>();
+    private List<StockDetails> stockDetails =new ArrayList<>();
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dividend> dividend =new ArrayList<>();

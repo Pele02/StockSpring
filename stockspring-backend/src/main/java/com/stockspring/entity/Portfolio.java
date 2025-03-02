@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,5 +40,5 @@ public class Portfolio {
     private User userPortfolio;
 
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PortfolioStock> portfolioStocks;
+    private List<PortfolioStock> portfolioStocks =new ArrayList<>();
 }
