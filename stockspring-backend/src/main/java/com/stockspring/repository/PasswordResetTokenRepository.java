@@ -1,8 +1,11 @@
 package com.stockspring.repository;
 
 import com.stockspring.entity.PasswordResetToken;
+import com.stockspring.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,6 +14,7 @@ import java.util.Optional;
  * <p>Provides methods for interacting with the {@link PasswordResetToken} entity,
  * including retrieving tokens by their value.</p>
  */
+@Repository
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
     /**
@@ -20,4 +24,6 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
      * @return an {@link Optional} containing the found token, or empty if not found
      */
     Optional<PasswordResetToken> findByToken(String token);
+
+    List<PasswordResetToken> findByUser(User user);
 }

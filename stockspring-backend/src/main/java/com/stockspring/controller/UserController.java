@@ -1,16 +1,37 @@
 package com.stockspring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.stockspring.dto.LoginDTO;
-import com.stockspring.dto.RegisterDTO;
-import com.stockspring.service.UserService;
-import com.stockspring.utility.JwtUtility;
-import org.json.JSONObject;
-import org.modelmapper.ModelMapper;
+import com.stockspring.entity.PasswordResetToken;
+import com.stockspring.entity.Role;
+import com.stockspring.entity.User;
+import com.stockspring.entity.UserRole;
+import com.stockspring.repository.PasswordResetTokenRepository;
+import com.stockspring.repository.RoleRepository;
+import com.stockspring.repository.UserRepository;
+import com.stockspring.security.jwt.JwtUtils;
+import com.stockspring.security.request.LoginRequest;
+import com.stockspring.security.request.SignupRequest;
+import com.stockspring.security.response.MessageResponse;
+import com.stockspring.security.response.UserInfoResponse;
+import com.stockspring.security.service.UserDetailsImpl;
+import com.stockspring.service.EmailServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller class for managing user-related operations.
@@ -32,137 +53,214 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private JwtUtils jwtUtils;
 
     @Autowired
-    private JwtUtility jwtUtility;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private ModelMapper modelMapper;
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+
+    @Autowired
+    private EmailServiceImpl emailService;
 
 
-    /**
-     * Registers a new user in the application.
-     *
-     * <p>
-     *     Check if there is already registered the email and user, if they are not registered, create new user.
-     * </p>
-     *
-     * @param registerDTO the data transfer object containing user registration details
-     * @return a {@link ResponseEntity} with an appropriate HTTP status and message
-     */
-    @PostMapping(path = "/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterDTO registerDTO) {
-        if (userService.existsByUsername(registerDTO.getUsername()) || userService.existsByEmail(registerDTO.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("The username or email is already in use!");
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        try {
-            // Add the user to the database
-            userService.addUser(registerDTO);
-
-            // Return the token in the response body
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("User registered successfully! Please log in.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while registering the user: " + e.getMessage());
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
+
+        // Create new user's account
+        User user = new User(signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                encoder.encode(signUpRequest.getPassword()));
+
+        Set<String> strRoles = signUpRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByRoleName(UserRole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                        break;
+                    case "user":
+                        Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                        break;
+                    default:
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Invalid role.");
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
     /**
-     * Log in user and generates a JWT token if successful.
-     *
+     * Endpoint to authenticate a user and generate a JWT token.
      * <p>
-     *     This method checks the username and password against stored credentials. If
-     *      authentication succeeds, a JWT token is generated and returned.
+     * This method authenticates the user using the provided username and password,
+     * and generates a JWT token for the user if the credentials are valid.
      * </p>
      *
-     * @param loginDTO the data transfer object containing user registration details
-     * @return a {@link ResponseEntity} with an appropriate HTTP status and message
+     * @param loginRequest the login request containing the user's credentials
+     * @return a {@link ResponseEntity} with the user's information and JWT token if the
+     * credentials are valid, or a 404 status if the credentials are invalid
      */
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
-        // Authenticate user (use your authentication service)
-        boolean isAuthenticated = userService.isAuthenticated(loginDTO);
-        if (!isAuthenticated) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        } catch (AuthenticationException exception) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", "Bad credentials");
+            map.put("status", false);
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
         }
 
-        // Generate JWT
-        String token = jwtUtility.generateToken(loginDTO.getUsername());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"token\": \"" + token + "\"}");
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        UserInfoResponse response = new UserInfoResponse(userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(), roles);
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
     }
 
-    /**
-     * Endpoint to request a password reset email.
-     *<p>
-     *     This methode sends an email to the User that requested the password reset if the User
-     *     is in the database.
-     *</p>
-     *
-     * @param email the email address of the user requesting a password reset
-     * @return a {@link ResponseEntity} with a success message if the email was sent,
-     *         or a 404 status if the email is not associated with any user
-     */
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> resetPasswordRequest(@RequestParam String email) {
-        boolean isEmailSent = userService.sendPasswordResetEmail(email);
-
-        if (isEmailSent) {
-            return ResponseEntity.ok("Password reset email sent successfully.");
-        } else {
-            return ResponseEntity.status(404).body("Email not found.");
+    @GetMapping("/username")
+    public String getUsername(Authentication authentication) {
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getUsername();
         }
+        return null;
     }
 
-    /**
-     * Endpoint to reset the user's password using a reset token.
-     *<p>
-     *     The User has a given time to reset his password.
-     *</p>
-     *
-     * @param token the reset token provided to the user
-     * @param newPassword the new password to set for the user
-     * @return a {@link ResponseEntity} with a success message if the password was reset,
-     *         or a 400 status if the token is invalid or expired
-     */
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserDetails(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        UserInfoResponse response = new UserInfoResponse(userDetails.getId(),
+                userDetails.getUsername(), userDetails.getEmail(), roles);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        ResponseCookie cookie = jwtUtils.deleteJwtCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,
+                cookie.toString()).body("You have been logged out successfully.");
+    }
+
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        boolean isPasswordReset = userService.resetPassword(token, newPassword);
+    public String resetPassword(@RequestParam("email") String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-        if (isPasswordReset) {
-            return ResponseEntity.ok("Password reset successfully.");
-        } else {
-            return ResponseEntity.status(400).body("Invalid or expired token.");
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(token);
+        resetToken.setUser(user);
+        resetToken.setExpiryDate(new Date(System.currentTimeMillis() + 3600000)); // 1 hour expiry
+        tokenRepository.save(resetToken);
+
+
+        String resetLink = "http://localhost:8081/auth/reset-password?token=" + token;
+        emailService.sendResetEmail(email, resetLink);
+
+        return "Password reset link sent to your email.";
+    }
+
+    @PutMapping("/reset-password/confirm")
+    public String confirmResetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        // Check if the token is expired
+        if (resetToken.getExpiryDate().before(new Date())) {
+            throw new RuntimeException("Token has expired");
         }
+
+        User user = resetToken.getUser();
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Optionally, delete the token after successful password reset
+        List<PasswordResetToken> userTokens = tokenRepository.findByUser(user);
+        tokenRepository.deleteAll(userTokens);
+
+        return "Password reset successfully.";
     }
 
     @DeleteMapping("/delete-account")
-   public ResponseEntity<String> deleteAccount(@RequestBody String jsonToken) throws JsonProcessingException {
-        JSONObject jsonObject = new JSONObject(jsonToken);
-        String token = jsonObject.getString("token");
+    public ResponseEntity<?> deleteAccount(Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    try {
-        // Extract username from token
-        String username = jwtUtility.extractUsername(token);
+        userRepository.delete(userRepository.findByUsername(userDetails.getUsername()).get());
 
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-        }
-
-        // Delete user account
-        if (userService.deleteUser(username)) {
-            return ResponseEntity.ok("Account deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete account");
-        }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        return ResponseEntity.ok().body("Account deleted successfully");
     }
+
+//    public ResponseEntity<String> deleteAccount(@RequestBody String jsonToken) throws JsonProcessingException {
+//        JSONObject jsonObject = new JSONObject(jsonToken);
+//        String token = jsonObject.getString("token");
+//
+//        try {
+//            // Extract username from token
+//            String username = jwtUtility.extractUsername(token);
+//
+//            if (username == null) {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+//            }
+//
+//            // Delete user account
+//            if (userService.deleteUser(username)) {
+//                return ResponseEntity.ok("Account deleted successfully");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete account");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+//        }
+//    }
 }
 
-}
