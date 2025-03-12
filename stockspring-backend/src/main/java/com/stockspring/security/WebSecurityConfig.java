@@ -1,13 +1,9 @@
 package com.stockspring.security;
 
-import com.stockspring.entity.Role;
-import com.stockspring.entity.UserRole;
-import com.stockspring.repository.RoleRepository;
 import com.stockspring.security.jwt.AuthEntryPointJwt;
 import com.stockspring.security.jwt.AuthTokenFilter;
 import com.stockspring.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -85,26 +79,26 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CommandLineRunner initData(RoleRepository roleRepository) {
-        return args -> {
-            // Retrieve or create roles
-            Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
-                    .orElseGet(() -> {
-                        Role newUserRole = new Role(UserRole.ROLE_USER);
-                        return roleRepository.save(newUserRole);
-                    });
-
-
-            Role adminRole = roleRepository.findByRoleName(UserRole.ROLE_ADMIN)
-                    .orElseGet(() -> {
-                        Role newAdminRole = new Role(UserRole.ROLE_ADMIN);
-                        return roleRepository.save(newAdminRole);
-                    });
-
-            Set<Role> userRoles = Set.of(userRole);
-            Set<Role> adminRoles = Set.of(userRole, adminRole);
-
-        };
-    }
+//    @Bean
+//    public CommandLineRunner initData(RoleRepository roleRepository) {
+//        return args -> {
+//            // Retrieve or create roles
+//            Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
+//                    .orElseGet(() -> {
+//                        Role newUserRole = new Role(UserRole.ROLE_USER);
+//                        return roleRepository.save(newUserRole);
+//                    });
+//
+//
+//            Role adminRole = roleRepository.findByRoleName(UserRole.ROLE_ADMIN)
+//                    .orElseGet(() -> {
+//                        Role newAdminRole = new Role(UserRole.ROLE_ADMIN);
+//                        return roleRepository.save(newAdminRole);
+//                    });
+//
+//            Set<Role> userRoles = Set.of(userRole);
+//            Set<Role> adminRoles = Set.of(userRole, adminRole);
+//
+//        };
+//    }
 }
