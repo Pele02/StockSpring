@@ -4,6 +4,7 @@ import com.stockspring.entity.PasswordResetToken;
 import com.stockspring.entity.Role;
 import com.stockspring.entity.User;
 import com.stockspring.entity.UserRole;
+import com.stockspring.exception.APIException;
 import com.stockspring.repository.PasswordResetTokenRepository;
 import com.stockspring.repository.RoleRepository;
 import com.stockspring.repository.UserRepository;
@@ -28,7 +29,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,23 +94,23 @@ public class UserController {
 
         if (strRoles == null) {
             Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new APIException("Role is not found.", HttpStatus.NOT_FOUND.value()));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByRoleName(UserRole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new APIException("Role is not found.", HttpStatus.NOT_FOUND.value()));
                         roles.add(adminRole);
                         break;
                     case "user":
                         Role userRole = roleRepository.findByRoleName(UserRole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new APIException("Role is not found.", HttpStatus.NOT_FOUND.value()));
                         roles.add(userRole);
                         break;
                     default:
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Invalid role.");
+                        throw new APIException("Invalid role.", HttpStatus.BAD_REQUEST.value());
                 }
             });
         }
@@ -239,28 +239,5 @@ public class UserController {
 
         return ResponseEntity.ok().body("Account deleted successfully");
     }
-
-//    public ResponseEntity<String> deleteAccount(@RequestBody String jsonToken) throws JsonProcessingException {
-//        JSONObject jsonObject = new JSONObject(jsonToken);
-//        String token = jsonObject.getString("token");
-//
-//        try {
-//            // Extract username from token
-//            String username = jwtUtility.extractUsername(token);
-//
-//            if (username == null) {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-//            }
-//
-//            // Delete user account
-//            if (userService.deleteUser(username)) {
-//                return ResponseEntity.ok("Account deleted successfully");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete account");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-//        }
-//    }
 }
 
