@@ -65,6 +65,14 @@ public class PortfolioServiceImpl implements PortfolioService {
         return modelMapper.map(portfolio, PortfolioDTO.class);
     }
 
+    @Override
+    public PortfolioDTO getPortfolioById(Long portfolioId) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new APIException("Portfolio not found", HttpStatus.NOT_FOUND.value()));
+
+        return modelMapper.map(portfolio, PortfolioDTO.class);
+    }
+
 
     @Override
     public void deletePortfolio(Long portfolioId) {

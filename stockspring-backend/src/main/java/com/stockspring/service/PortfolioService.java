@@ -14,6 +14,8 @@ public interface PortfolioService {
 
     PortfolioDTO updatePortfolioName(Long portfolioId, String newPortfolioName);
 
+    PortfolioDTO getPortfolioById(Long portfolioId);
+
     void deletePortfolio(Long portfolioId);
 
     boolean existsByName(String portfolioName);

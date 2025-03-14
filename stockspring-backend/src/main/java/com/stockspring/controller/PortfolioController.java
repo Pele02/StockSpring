@@ -1,6 +1,7 @@
 package com.stockspring.controller;
 
 import com.stockspring.dto.PortfolioDTO;
+import com.stockspring.security.response.MessageResponse;
 import com.stockspring.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,11 @@ public class PortfolioController {
     private PortfolioService portfolioService;
 
     @PostMapping("/create")
-    public ResponseEntity<PortfolioDTO> createPortfolio(@RequestBody String portfolioName) {
+    public ResponseEntity<?> createPortfolio(@RequestBody String portfolioName) {
 
         if (portfolioService.existsByName(portfolioName)) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new MessageResponse("Portfolio with name '" + portfolioName + "' already exists."));
         }
 
         PortfolioDTO portfolioDTO = portfolioService.addPortfolio(portfolioName);
@@ -35,7 +37,13 @@ public class PortfolioController {
 
     }
 
-    @PutMapping("/{portfolioId}/name")
+    @GetMapping("/{portfolioId}")
+    public ResponseEntity<PortfolioDTO> getPortfolioById(@PathVariable Long portfolioId) {
+        PortfolioDTO portfolioDTO = portfolioService.getPortfolioById(portfolioId);
+        return new ResponseEntity<>(portfolioDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/{portfolioId}/new-name")
     public ResponseEntity<PortfolioDTO> updatePortfolioName(@PathVariable Long portfolioId, @RequestBody String newPortfolioName) {
         PortfolioDTO updatedPortfolio = portfolioService.updatePortfolioName(portfolioId, newPortfolioName);
         return ResponseEntity.ok(updatedPortfolio);
