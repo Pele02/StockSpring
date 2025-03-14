@@ -37,7 +37,7 @@ public class Dividend {
     private Double dividendGrowthFiveYears;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 }

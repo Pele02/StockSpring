@@ -55,7 +55,7 @@ public class StockDetails {
     private Double debtToMarketCap;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 

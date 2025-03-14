@@ -48,7 +48,7 @@ public class User {
     @ToString.Exclude
     private Set<Portfolio> portfolios;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

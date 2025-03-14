@@ -28,6 +28,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -171,7 +172,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user-details")
     public ResponseEntity<?> getUserDetails(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
@@ -232,10 +233,21 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-account")
-    public ResponseEntity<?> deleteAccount(Authentication authentication){
+    @Transactional
+    public ResponseEntity<?> deleteAccount(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        userRepository.delete(userRepository.findByUsername(userDetails.getUsername()).get());
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new APIException("User not found", HttpStatus.NOT_FOUND.value()));
+
+        // Clear associations
+        user.getPasswordResetTokens().clear();
+        user.getPortfolios().clear();
+        user.getRoles().clear();
+        userRepository.save(user);
+
+        // Now delete the user
+        userRepository.delete(user);
 
         return ResponseEntity.ok().body("Account deleted successfully");
     }

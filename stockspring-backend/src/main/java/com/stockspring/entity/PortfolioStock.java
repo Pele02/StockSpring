@@ -30,11 +30,11 @@ public class PortfolioStock {
     @Column(name = "profit", nullable = true)
     private Double profit;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
